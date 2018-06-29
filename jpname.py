@@ -30,7 +30,10 @@ def jpname_prob(name):
                 prob += models[a1][a2]
             except KeyError:
                 prob -= 0.2
-    return prob / nbigram
+    try:
+        return prob / nbigram
+    except ZeroDivisionError:
+        return 0.0
 
 
 def names_prob(names):

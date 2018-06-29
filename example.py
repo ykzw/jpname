@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+import urllib.request
 import operator
 import pyquery
 import jpname
@@ -42,5 +43,23 @@ def sigmod2018(k=10):
     print_topk(papers, k)
 
 
+def kdd2018(k=10):
+    url = 'http://www.kdd.org/kdd2018/accepted-papers'
+    with urllib.request.urlopen(url) as f:
+        txt = f.read()
+    pq = pyquery.PyQuery(txt)
+    paper_list = pq('.media-body')
+    papers = []
+    for paper in paper_list:
+        title = paper.getchildren()[0].text.split(':')[1].strip()
+        authors = paper.getchildren()[1].text_content().strip()
+        authors = [author.split('(')[0].strip()
+                   for author in authors.split(';')]
+        papers.append((title, authors))
+
+    print_topk(papers, k)
+
+
 if __name__ == '__main__':
-    sigmod2018()
+    # sigmod2018()
+    kdd2018()
